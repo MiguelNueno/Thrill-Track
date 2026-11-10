@@ -1,5 +1,5 @@
 public abstract class Deque<T> {
-    private class DLNode<T> {
+    private static class DLNode<T> {
         private T data;
         private DLNode<T> next;
         private DLNode<T> prev;
