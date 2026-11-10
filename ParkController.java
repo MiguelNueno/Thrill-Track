@@ -5,7 +5,6 @@ import java.util.Scanner;
  * Incomplete controller of model
  * 
  * 
- * 
  * @author davidsaage
  */
 public class ParkController {
