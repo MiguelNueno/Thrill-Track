@@ -16,8 +16,9 @@
 | DequeTest | Nana Ababio | No GenAI used |
 | PersonTest | Nana Ababio | No GenAI used |
 | WalletTest | Nana Ababio | No GenAI used |
-| Reflection |  | |
-| View | | |
+| README |  Miguel Nueno Armisén | No GenAI used |
+| Reflection | David Sage | No GenAI used |
+| View | David Sage| No GenAI used |
 
 ## System Overview & Architecture
 
