@@ -62,3 +62,4 @@ Possible next steps:
 - Ride Revenue & Analytics: Track and display real-time revenue and ticket usage per ride for park administrators.
 - Group & Bundle Purchases: Allow families or groups to purchase ticket bundles and join queues together.
 - Estimated Wait Times: Calculate real-time estimated wait times based on ride capacity and current line length.
+No significant changes were made from the specification we design in deliverable 2.
