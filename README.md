@@ -73,6 +73,19 @@ The application strictly separates responsibilities to maintain a clean boundary
 
 ## Reflection
 
+### What changed from spec
+The biggest change from the spec involved the id of each individual being resolved in the object itself giving
+each object an assigned ID. The controller class also was changed to involve handling for more possible errors.
+These changes came just for more simple functionality and to also guarentee that errors do not ocurr during runnning.
+
+### Stand alone
+The model does function alone without controller or view dependency. The controller only declares model instances and is not required for functionality, only doing possible error checking which the model assumes.
+
+### Unknown resolution
+Queue fuctionality for VIP guests was resolved having the status being part of the person model which allows person object integration into the queue independent of the status of the individual with only queue location implementation mattering which is handled by the ride model.
+
+### Still not finished
+The addition of rides and other stretch goals have yet to be implemented with many features being baked into the controller class and outside the view of the user. Controller prompting and control needs to also be spread across to the view to put more of a balanced responsibility on both.
 
 ## Next Steps
 
