@@ -1,5 +1,13 @@
 import java.util.Scanner;
 
+
+/**
+ * Incomplete controller of model
+ * 
+ * 
+ * 
+ * @author davidsaage
+ */
 public class ParkController {
      
     private static final double TICKET_PRICE = 2.00;
@@ -25,7 +33,7 @@ public class ParkController {
         view.displayWelcome();
         activeGuest = createActiveGuest();
         if (activeGuest == null) {
-            return; // input ended
+            return;
         }
  
         boolean running = true;
@@ -33,7 +41,7 @@ public class ParkController {
             view.displayMenu();
             String line = readLine();
             if (line == null) {
-                break; // input ended (Ctrl+D / end of piped input)
+                break;
             }
             switch (line.trim()) {
                 case "1":
@@ -65,7 +73,7 @@ public class ParkController {
     }
  
     // ---------------------------------------------------------------
-    // Handlers (validation lives here, per the spec)
+    // Handlers
     // ---------------------------------------------------------------
  
     public void handleBuyTickets(int ticketCount, double pricePerTicket) {
@@ -146,7 +154,7 @@ public class ParkController {
     }
  
     // ---------------------------------------------------------------
-    // Input helpers (bad input must never crash the program)
+    // Input helpers
     // ---------------------------------------------------------------
  
     private void promptBuyTickets() {

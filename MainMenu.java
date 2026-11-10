@@ -1,3 +1,10 @@
+/**
+ * Incomplete view of model
+ * 
+ * @author davidsage
+ */
+
+
 public class MainMenu {
         public void displayWelcome() {
         System.out.println("==============================");
