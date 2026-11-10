@@ -131,5 +131,65 @@ public class DequeTest
             assertNotNull(e);
         }
     }
+    
+    /**
+     * tests adding and removing a null element
+     */
+    public void testAddAndRemoveNull()
+    {
+        deque.addToBack(null);
+
+        assertEquals(1, deque.size());
+        assertNull(deque.removeFromFront());
+        assertTrue(deque.isEmpty());
+    }
+
+    /**
+     * tests removing the first occurrence of duplicates
+     */
+    public void testRemoveDuplicateElements()
+    {
+        deque.addToBack("A");
+        deque.addToBack("B");
+        deque.addToBack("A");
+
+        assertTrue(deque.remove("A"));
+        assertEquals(2, deque.size());
+        assertEquals("B", deque.removeFromFront());
+        assertEquals("A", deque.removeFromFront());
+    }
+
+    /**
+     * tests adding and removing multiple elements
+     */
+    public void testMultipleAddAndRemove()
+    {
+        deque.addToFront("A");
+        deque.addToBack("B");
+        deque.addToFront("C");
+
+        assertEquals(3, deque.size());
+        assertEquals("C", deque.removeFromFront());
+        assertEquals("B", deque.removeFromBack());
+        assertEquals("A", deque.removeFromFront());
+
+        assertEquals(0, deque.size());
+        assertTrue(deque.isEmpty());
+    }
+
+    /**
+     * tests contains after removing an element
+     */
+    public void testContainsAfterRemove()
+    {
+        deque.addToBack("A");
+        deque.addToBack("B");
+
+        deque.remove("A");
+
+        assertFalse(deque.contains("A"));
+        assertTrue(deque.contains("B"));
+    }
+
 
 }
