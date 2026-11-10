@@ -92,5 +92,25 @@ public class PersonTest
 
         assertTrue(person1.getId() != person2.getId());
     }
+    /**
+     * tests a person with a null name
+     */
+    public void testPersonWithNullName()
+    {
+        Person person = new Person(null);
+    
+        assertNull(person.getName());
+        assertFalse(person.isVip());
+    }
 
+    /**
+     * tests a person with an empty wallet
+     */
+    public void testPersonWithEmptyWallet()
+    {
+        Person person = new Person("Valeria", false, 18, 170, 0, 0);
+    
+        assertEquals(0, person.getWallet().getCashBalance());
+        assertEquals(0, person.getWallet().getTicketBalance());
+    }
 }
