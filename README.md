@@ -4,6 +4,21 @@
 
 ---
 
+## Attribution
+
+| Class | People Who Contributed | GenAI usage |
+|--------|------------|---------------|
+| Ride   | David Sage | No GenAI used |
+| Deque  | David Sage | No GenAI used |
+| Person | David Sage | No GenAI used |
+| Wallet | David Sage | No GenAI used |
+| RideTest | Nana Ababio | No GenAI used |
+| DequeTest | Nana Ababio | No GenAI used |
+| PersonTest | Nana Ababio | No GenAI used |
+| WalletTest | Nana Ababio | No GenAI used |
+| Reflection |  | |
+| View | | |
+
 ## System Overview & Architecture
 
 ### MVC Role Division
@@ -56,7 +71,11 @@ The application strictly separates responsibilities to maintain a clean boundary
    git clone [https://github.com/your-username/Thrill-Track.git](https://github.com/your-username/Thrill-Track.git)
    cd Thrill-Track
 
-Possible next steps:
+## Reflection
+
+
+## Next Steps
+
 - Hotel Key Pass Integration: Link a guest's hotel room key card to automatically grant VIP line privileges and complimentary tickets upon check-in.
 - Automated Ride Simulation: Add background timers to run rides automatically at fixed intervals and progress queues dynamically.
 - Ride Revenue & Analytics: Track and display real-time revenue and ticket usage per ride for park administrators.
