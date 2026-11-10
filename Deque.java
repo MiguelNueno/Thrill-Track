@@ -6,7 +6,6 @@
  * @author davidsage
  */
 
-//change
 public class Deque<T> {
     private static class DLNode<T> {
         private T data;
