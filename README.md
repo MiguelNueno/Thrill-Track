@@ -55,3 +55,10 @@ The application strictly separates responsibilities to maintain a clean boundary
    ```bash
    git clone [https://github.com/your-username/Thrill-Track.git](https://github.com/your-username/Thrill-Track.git)
    cd Thrill-Track
+
+Possible next steps:
+- Hotel Key Pass Integration: Link a guest's hotel room key card to automatically grant VIP line privileges and complimentary tickets upon check-in.
+- Automated Ride Simulation: Add background timers to run rides automatically at fixed intervals and progress queues dynamically.
+- Ride Revenue & Analytics: Track and display real-time revenue and ticket usage per ride for park administrators.
+- Group & Bundle Purchases: Allow families or groups to purchase ticket bundles and join queues together.
+- Estimated Wait Times: Calculate real-time estimated wait times based on ride capacity and current line length.
