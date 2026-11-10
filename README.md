@@ -15,5 +15,6 @@
 | DequeTest | Nana Ababio | No GenAI used |
 | PersonTest | Nana Ababio | No GenAI used |
 | WalletTest | Nana Ababio | No GenAI used |
+| DequeTest | Nana Ababio | No GenAI used |
 
 **tests classes, readme reflection, and view for prototype need to be done**
