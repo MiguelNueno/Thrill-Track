@@ -13,4 +13,4 @@
 | Person | David Sage | No GenAI used |
 | Wallet | David Sage | No GenAI used |
 
-** tests classes, readme reflection, and view for prototype need to be done **
+**tests classes, readme reflection, and view for prototype need to be done**
