@@ -1,5 +1,11 @@
+/**
+ * Represents a person with attributes such as name, age, height, VIP status, and wallet.
+ * 
+ * @author davidsage
+ */
+
 public class Person {
-    private static int idCounter = 0;
+    private static int idCounter = 0; // counts the number of person objects for id assignement
 
     int id;
     boolean inQueue;

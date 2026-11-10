@@ -1,3 +1,10 @@
+/**
+ * Wallet class represents a user's wallet that holds cash balance and tickets.
+ * 
+ * @author davidsage
+ */
+
+
 public class Wallet {
     private int balance;
     private int tickets;

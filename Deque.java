@@ -1,3 +1,12 @@
+/**
+ * A generic Deque (double-ended queue) implementation using a doubly linked list.
+ *
+ * @param <T> the type of elements held in this deque
+ * 
+ * @author davidsage
+ */
+
+
 public abstract class Deque<T> {
     private static class DLNode<T> {
         private T data;
