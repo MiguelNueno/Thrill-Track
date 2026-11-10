@@ -1,5 +1,5 @@
 /**
- * A generic Deque (double-ended queue) implementation using a doubly linked list.
+ * A Deque (double-ended queue) implementation using a doubly linked chain.
  *
  * @param <T> the type of elements held in this deque
  * 
@@ -7,7 +7,7 @@
  */
 
 
-public abstract class Deque<T> {
+public class Deque<T> {
     private static class DLNode<T> {
         private T data;
         private DLNode<T> next;
