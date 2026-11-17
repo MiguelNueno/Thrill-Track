@@ -10,6 +10,8 @@ public class Ride {
     private Deque<Person> line;
     private int cost;
     private int minHeight;
+    private int totalRidersServed;
+    private int totalTicketsCollected;
 
     public Ride(String name, int capacity, int cost) {
         this.name = name;
@@ -17,6 +19,8 @@ public class Ride {
         this.line = new Deque<>();
         this.cost = cost;
         minHeight = -1; // Default minimum height is -1 if not specified
+        this.totalRidersServed = 0;
+        this.totalTicketsCollected = 0;
     }
 
     
@@ -44,8 +48,20 @@ public class Ride {
     public Deque<Person> getLine() {
         return line;
     }
+    
+    public int getTotalRidersServed() {
+        return totalRidersServed;
+    }
+
+    public int getTotalTicketsCollected() {
+        return totalTicketsCollected;
+    }
 
     public void addPerson(Person person) {
+        if (person == null) {
+            throw new IllegalArgumentException("Cannot add a null "
+                + "person to the ride line.");
+        }
         if (person.isVip()) {
             line.addToFront(person);
         } else {
@@ -61,6 +77,9 @@ public class Ride {
             riders[i] = line.removeFromFront();
         }
 
+        totalRidersServed += numRiders;
+        totalTicketsCollected += numRiders * cost;
+        
         return riders;
     }
 

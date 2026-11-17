@@ -62,10 +62,13 @@ public class ParkController {
                     showStatus();
                     break;
                 case "5":
+                    showAnalytics();
+                    break;
+                case "6":
                     running = false;
                     break;
                 default:
-                    view.displayError("Please enter a number from 1 to 5.");
+                    view.displayError("Please enter a number from 1 to 6.");
             }
         }
         view.displayMessage("Thanks for visiting. Goodbye!");
@@ -140,6 +143,24 @@ public class ParkController {
             names[i] = riders[i].getName();
         }
         view.displayRidersDispatched(ride.getName(), names);
+    }
+    
+    public void showAnalytics() {
+        view.displayMessage("\n--- RIDE REVENUE & ANALYTICS ---");
+        int totalRiders = 0;
+        int totalTickets = 0;
+
+        for (Ride r : availableRides) {
+            int riders = r.getTotalRidersServed();
+            int tickets = r.getTotalTicketsCollected();
+            double revenue = tickets * TICKET_PRICE;
+
+            view.displayRideAnalytics(r.getName(), riders, tickets, revenue);
+            totalRiders += riders;
+            totalTickets += tickets;
+        }
+
+        view.displayAnalyticsSummary(totalRiders, totalTickets, totalTickets * TICKET_PRICE);
     }
  
     private Ride findRide(String name) {
