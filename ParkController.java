@@ -1,12 +1,10 @@
-import java.util.Scanner;
-
-
 /**
- * Incomplete controller of model
+ * Controller of the program
  * 
  * 
  * @author davidsaage
  */
+
 public class ParkController {
      
     private static final double TICKET_PRICE = 2.00;
@@ -15,69 +13,60 @@ public class ParkController {
     private Person activeGuest;
     private Ride[] availableRides;
     private MainMenu view;
-    private Scanner inputScanner;
  
     public ParkController(MainMenu view) {
         this.view = view;
-        this.inputScanner = new Scanner(System.in);
         this.availableRides = createRides();
         seedBackgroundGuests();
     }
  
     // ---------------------------------------------------------------
-    // Main loop
+    // Setup requests from the view
     // ---------------------------------------------------------------
- 
-    public void start() {
-        view.displayWelcome();
-        activeGuest = createActiveGuest();
-        if (activeGuest == null) {
-            return;
-        }
- 
-        boolean running = true;
-        while (running) {
-            view.displayMenu();
-            String line = readLine();
-            if (line == null) {
-                break;
-            }
-            switch (line.trim()) {
-                case "1":
-                    promptBuyTickets();
-                    break;
-                case "2":
-                    view.displayMessage("Which ride?");
-                    showRideNames();
-                    String joinName = readLine();
-                    if (joinName != null) handleJoinQueue(joinName.trim());
-                    break;
-                case "3":
-                    view.displayMessage("Which ride?");
-                    showRideNames();
-                    String runName = readLine();
-                    if (runName != null) handleRunRide(runName.trim());
-                    break;
-                case "4":
-                    showStatus();
-                    break;
-                case "5":
-                    showAnalytics();
-                    break;
-                case "6":
-                    running = false;
-                    break;
-                default:
-                    view.displayError("Please enter a number from 1 to 6.");
-            }
-        }
-        view.displayMessage("Thanks for visiting. Goodbye!");
+
+    public void createGuest(String name, int age, int heightInches, String vipAnswer) {
+        boolean vip = vipAnswer != null && vipAnswer.trim().equalsIgnoreCase("y");
+        activeGuest = new Person(name, vip, age, heightInches, STARTING_CASH, 0);
     }
- 
+
+    public int parsePositiveInt(String text) {
+        try {
+            int n = Integer.parseInt(text.trim());
+            if (n > 0) {
+                return n;
+            }
+        } catch (NumberFormatException ignored) { 
+
+        }
+        view.displayError("Please enter a positive whole number.");
+        return -1;
+    }
+
+    public String[] getRideNames() {
+        String[] names = new String[availableRides.length];
+        for (int i = 0; i < availableRides.length; i++) {
+            names[i] = availableRides[i].getName();
+        }
+        return names;
+    }
+
+    public double getTicketPrice() {
+        return TICKET_PRICE;
+    }
+
+
     // ---------------------------------------------------------------
     // Handlers
     // ---------------------------------------------------------------
  
+    public void handleBuyTickets(String countText) {
+        try {
+            handleBuyTickets(Integer.parseInt(countText.trim()), TICKET_PRICE);
+        } catch (NumberFormatException e) {
+            view.displayError("Please enter a whole number.");
+        }
+    }
+
     public void handleBuyTickets(int ticketCount, double pricePerTicket) {
         if (ticketCount <= 0) {
             view.displayError("Ticket count must be greater than zero.");
@@ -99,7 +88,7 @@ public class ParkController {
             view.displayError("Purchase failed.");
         }
     }
- 
+
     public void handleJoinQueue(String rideName) {
         Ride ride = findRide(rideName);
         if (ride == null) {
@@ -126,10 +115,13 @@ public class ParkController {
         }
         ride.addPerson(activeGuest);
         activeGuest.setInQueue(true);
-        view.displayMessage("You joined the line for " + ride.getName()
-            + (activeGuest.isVip() ? " at the front (VIP)." : "."));
+        if (activeGuest.isVip()) {
+            view.displayMessage("You joined the line for " + ride.getName() + " at the front (VIP).");
+        } else {
+            view.displayMessage("You joined the line for " + ride.getName() + ".");
+        }
     }
- 
+
     public void handleRunRide(String rideName) {
         Ride ride = findRide(rideName);
         if (ride == null) {
@@ -144,25 +136,17 @@ public class ParkController {
         }
         view.displayRidersDispatched(ride.getName(), names);
     }
-    
-    public void showAnalytics() {
-        view.displayMessage("\n--- RIDE REVENUE & ANALYTICS ---");
-        int totalRiders = 0;
-        int totalTickets = 0;
 
+    public void handleViewStatus() {
+        Wallet w = activeGuest.getWallet();
+        view.displayMessage(String.format("%s: $%d cash, %d tickets%s",
+            activeGuest.getName(), w.getCashBalance(), w.getTicketBalance(),
+            activeGuest.isInQueue() ? " (in a line)" : ""));
         for (Ride r : availableRides) {
-            int riders = r.getTotalRidersServed();
-            int tickets = r.getTotalTicketsCollected();
-            double revenue = tickets * TICKET_PRICE;
-
-            view.displayRideAnalytics(r.getName(), riders, tickets, revenue);
-            totalRiders += riders;
-            totalTickets += tickets;
+            view.displayRideStatus(r.getName(), r.getLine().size());
         }
-
-        view.displayAnalyticsSummary(totalRiders, totalTickets, totalTickets * TICKET_PRICE);
     }
- 
+
     private Ride findRide(String name) {
         if (name == null) return null;
         for (Ride r : availableRides) {
@@ -172,79 +156,7 @@ public class ParkController {
         }
         return null;
     }
- 
-    // ---------------------------------------------------------------
-    // Input helpers
-    // ---------------------------------------------------------------
- 
-    private void promptBuyTickets() {
-        view.displayMessage(String.format("Tickets cost $%.2f each. How many?", TICKET_PRICE));
-        String line = readLine();
-        if (line == null) return;
-        try {
-            int count = Integer.parseInt(line.trim());
-            handleBuyTickets(count, TICKET_PRICE);
-        } catch (NumberFormatException e) {
-            view.displayError("Please enter a whole number.");
-        }
-    }
- 
-    private void showStatus() {
-        Wallet w = activeGuest.getWallet();
-        view.displayMessage(String.format("%s: $%d cash, %d tickets%s",
-            activeGuest.getName(), w.getCashBalance(), w.getTicketBalance(),
-            activeGuest.isInQueue() ? " (in a line)" : ""));
-        for (Ride r : availableRides) {
-            view.displayRideStatus(r.getName(), r.getLine().size());
-        }
-    }
- 
-    private void showRideNames() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < availableRides.length; i++) {
-            if (i > 0) sb.append(", ");
-            sb.append(availableRides[i].getName());
-        }
-        view.displayMessage("(" + sb + ")");
-    }
- 
-    /** Returns null if input has ended. */
-    private String readLine() {
-        return inputScanner.hasNextLine() ? inputScanner.nextLine() : null;
-    }
- 
-    private int readPositiveInt(String prompt) {
-        while (true) {
-            view.displayMessage(prompt);
-            String line = readLine();
-            if (line == null) return -1;
-            try {
-                int n = Integer.parseInt(line.trim());
-                if (n > 0) return n;
-            } catch (NumberFormatException ignored) { }
-            view.displayError("Please enter a positive whole number.");
-        }
-    }
- 
-    private Person createActiveGuest() {
-        view.displayMessage("What is your name?");
-        String name = readLine();
-        if (name == null) return null;
-        name = name.trim().isEmpty() ? "Guest" : name.trim();
- 
-        int age = readPositiveInt("How old are you?");
-        if (age < 0) return null;
-        int height = readPositiveInt("What is your height in inches?");
-        if (height < 0) return null;
- 
-        view.displayMessage("VIP guest? (y/n)");
-        String vip = readLine();
-        if (vip == null) return null;
-        boolean isVip = vip.trim().equalsIgnoreCase("y");
- 
-        return new Person(name, isVip, age, height, STARTING_CASH, 0);
-    }
- 
+
     // ---------------------------------------------------------------
     // Setup data
     // ---------------------------------------------------------------
