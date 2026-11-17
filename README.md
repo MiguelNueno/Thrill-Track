@@ -16,9 +16,9 @@
 | DequeTest | Nana Ababio | No GenAI used |
 | PersonTest | Nana Ababio | No GenAI used |
 | WalletTest | Nana Ababio | No GenAI used |
-| README |  Miguel Nueno Armisén | No GenAI used |
-| Reflection | David Sage | No GenAI used |
-| View | David Sage| No GenAI used |
+| README | Miguel Nueno Armisén | No GenAI used|
+| Reflection | David Sage, Miguel Nueno Armisén | No GenAI used |
+| View | David Sage, Miguel Nueno Armisén | No GenAI used |
 
 ## System Overview & Architecture
 
@@ -43,6 +43,7 @@ The application strictly separates responsibilities to maintain a clean boundary
 * **Ticket & Financial Management:** Integrated `Wallet` tracks cash and ticket balances, preventing unauthorized ticket purchases or unbudgeted ride entry.
 * **Batch Line Dispatching:** Running a ride removes up to `capacity` guests from the front of the queue using `popFront()`.
 * **Defensive Input Validation:** Rejects invalid ride lookups, guests under safety height requirements, insufficient ticket balances, and double-queue attempts.
+* **Ride Revenue & Analytics:** Tracks cumulative riders served, tickets collected, and dollar revenue per ride as well as park-wide totals, accessible through the main menu.
 
 ---
 
@@ -74,25 +75,73 @@ The application strictly separates responsibilities to maintain a clean boundary
 
 ## Reflection
 
-### What changed from spec
-The biggest change from the spec involved the id of each individual being resolved in the object itself giving
-each object an assigned ID. The controller class also was changed to involve handling for more possible errors.
-These changes came just for more simple functionality and to also guarantee that errors do not occur during running.
+### How did our design absorb the change?
 
-### Stand alone
-The model does function alone without controller or view dependency. The controller only declares model instances and is not required for functionality, only doing possible error checking which the model assumes.
+For Deliverable 4, we implemented Ride Revenue & Analytics from our Deliverable 3 Next Steps list. This feature touched four files:
 
-### Unknown resolution
-Queue functionality for VIP guests was resolved having the status being part of the person model which allows person object integration into the queue independent of the status of the individual with only queue location implementation mattering which is handled by the ride model.
+Ride.java (Model): Added totalRidersServed and totalTicketsCollected fields, initialized them in the constructor, incremented both inside runRide(), and exposed getters (getTotalRidersServed(), getTotalTicketsCollected()).
 
-### Still not finished
-The addition of rides and other stretch goals have yet to be implemented with many features being baked into the controller class and outside the view of the user. Controller prompting and control needs to also be spread across to the view to put more of a balanced responsibility on both.
+ParkController.java (Controller): Added showAnalytics() to iterate over availableRides, compute total park riders/tickets/dollar revenue using TICKET_PRICE, and pass the data to the view, plus wired option 5 in start().
+
+MainMenu.java (View): Added 5. View Ride Analytics to displayMenu() (moving Exit to 6) and added displayRideAnalytics() and displayAnalyticsSummary() to format and print the table.
+
+### Did the change cross the model/view line?
+
+No—the model/view boundary remained intact and actually improved compared to Deliverable 3:
+
+Ride holds only raw integer counts (totalRidersServed and totalTicketsCollected) and has zero awareness of dollar prices (TICKET_PRICE), console formatting, or MainMenu.
+
+MainMenu does not hold references to Ride or Deque objects; ParkController.showAnalytics() extracts primitive values (String, int, double) from the models and passes them to MainMenu.displayRideAnalytics(...).
+
+Addressing our D3 reflection note about formatting leaking into the controller, we also moved status formatting (displayGuestStatus(...)) out of ParkController and into MainMenu.
+
+### What changed from our D3 plan?
+
+Feature Selection: Our D3 Next Steps listed five stretch goals (Hotel Key Pass, Automated Ride Simulation, Ride Revenue & Analytics, Group/Bundle Purchases, and Estimated Wait Times). We selected Ride Revenue & Analytics as our single D4 change feature because it builds directly on Ride.runRide() without introducing multithreading concurrency issues or complex multi-person transaction rollbacks.
+
+Model Validation: We tightened Ride constructor and addPerson() validation (IllegalArgumentException on blank names, non-positive capacity, negative cost, or null guests) so bad inputs are caught at the model boundary as well as in ParkController.
+
+Controller/View Balance: We shifted menu option Exit from 5 to 6 to accommodate 5. View Ride Analytics and moved status printf formatting from ParkController into MainMenu.
+
+### What doesn't work yet?
+
+Guest Switching / Multi-Guest Sessions: Currently, ParkController creates a single interactive activeGuest at startup alongside three static background guests (Alex, Sam, Jordan). Users cannot switch between multiple interactive guests or register new guests mid-session.
+
+Persistence: Ride analytics and guest balances reset when the program exits; data is not yet saved to disk.
+
+Remaining Stretch Goals: Estimated Wait Times, Group/Bundle Purchases, Hotel Key Pass Integration, and Automated Ride Simulation are not yet implemented.
 
 ## Next Steps
 
-- Hotel Key Pass Integration: Link a guest's hotel room key card to automatically grant VIP line privileges and complimentary tickets upon check-in.
-- Automated Ride Simulation: Add background timers to run rides automatically at fixed intervals and progress queues dynamically.
-- Ride Revenue & Analytics: Track and display real-time revenue and ticket usage per ride for park administrators.
-- Group & Bundle Purchases: Allow families or groups to purchase ticket bundles and join queues together.
-- Estimated Wait Times: Calculate real-time estimated wait times based on ride capacity and current line length.
-No significant changes were made from the specification we design in deliverable 2.
+### What is left for the final build?
+
+- Multi-Guest / Guest-Switching Support: Add a menu option allowing the user to create or switch active guests mid-session so VIP vs. standard queue ordering (addToFront vs. addToBack) can be demonstrated live with multiple interactive guests.
+
+- Estimated Wait Time Display: Add a rideDurationMinutes attribute to Ride and display real-time estimated wait times alongside queue lengths in MainMenu.displayRideStatus(...).
+
+- Full Bad-Input & Boundary Audit: Expand automated JUnit coverage across PersonTest, WalletTest, and DequeTest to verify every edge case in the Input Validation Matrix, and test extreme inputs (e.g., integer overflow on ticket purchases, whitespace-only ride names) in the console loop.
+
+- Code Cleanup & Javadoc Polish: Remove any leftover placeholder comments and ensure consistent Javadoc comments across all model, view, and controller classes.
+
+### Stretch Goals Commitment
+
+Committing to:
+
+Estimated Wait Times: Low risk and high demo value; uses Deque.size(), Ride.capacity, and a ride cycle duration to show guests how long a line will take before joining.
+
+Multi-Guest / Group Queueing (Simplified): Allowing multiple guests to be created and queued in one session to showcase VIP priority line-skipping in real time.
+
+Dropping:
+
+Automated Ride Simulation: Dropped because background timer threads introduce race conditions with Scanner console input and Deque mutations that add unnecessary instability for a console app.
+
+Hotel Key Pass Integration: Dropped to keep scope focused on core park ticketing, queue priority, and ride analytics rather than external hotel room state.
+
+### 3-Minute Demo Walkthrough
+
+Guest Creation & Initial State (~30 sec)
+Ticket Purchase & Bad-Input Recovery (~45 sec)
+VIP Priority Queueing & Validation (~45 sec)
+Ride Dispatch & Live Analytics Update (~60 sec)
+
+
